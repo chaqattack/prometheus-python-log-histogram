@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-# Log-generator.py
+# app-server.py
 # version 1.0
 # Autor: Charles Antigua
 # This script generate a fake log file in this format
@@ -11,8 +11,6 @@
 
 from flask import Response, Flask, request
 from datetime import datetime, timedelta
-import pandas as pd
-import numpy as np
 import random
 import prometheus_client
 from prometheus_client import Histogram, Summary
@@ -51,9 +49,6 @@ def logGenerator():
     # Log File Name
     my_log = open("mylog.json", "w")
 
-    RxData = []
-    TxData = []
-
     for second in range(seconds):
         Rx = getRandom()
         Tx = getRandom()
@@ -66,19 +61,8 @@ def logGenerator():
         txh.observe(Tx)
         rxh.observe(Rx)
 
-        RxData.append(Rx)
-        TxData.append(Tx)   
-
-    data = { 'Tx': TxData, 'Rx':RxData }
-    #print(data)
-    df = pd.DataFrame(data=data)
-    bins = np.array([1, 500, 1000, 5000, 9000, 10001])
-
-    df["TxBucket"] = pd.cut(df.Tx, bins)
-    df["RxBucket"] = pd.cut(df.Rx, bins)
-    print(df)
     res = []
-    res.append("Logs generated<")
+    res.append("Logs generated")
     res.append(prometheus_client.generate_latest(s))
     res.append("go to localhost:5000/metrics to see the results")
     return Response(res, mimetype="text/plain")
