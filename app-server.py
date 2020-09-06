@@ -22,7 +22,7 @@ app = Flask(__name__)
 _inf = float("inf")
 txh = Histogram('Tx', 'Tx Histogram', buckets=(1, 500, 1000, 5000, 9000, _inf))
 rxh = Histogram('Rx', 'Rx Histogram', buckets=(1, 500, 1000, 5000, 9000, _inf))
-s = Summary('request_latency_seconds', 'Description of summary')
+s = Summary('request_latency_seconds', 'Time Spent Generating the log')
 def getRandom():
     return random.randint(1, 10000)
 
@@ -77,5 +77,5 @@ def requests_count():
    
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='localhost', debug=True)
 
